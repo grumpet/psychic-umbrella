@@ -66,7 +66,7 @@ const navigate = useNavigate();
             <button onClick={() => {
       navigate('/next', { state: { key: key, value: value ,"username":userName} });
     }}>
-    chat with {key}
+    send message to {key}
     </button>
 
           </li>
@@ -74,11 +74,11 @@ const navigate = useNavigate();
           
         ))}
       </ul>
-     {isConnected && (
-        <button onClick={getConnectedUsers}>
-          Refresh Connected Users
-        </button>
-      )}
+      {isConnected && (
+  <button onClick={() => getConnectedUsers(userName)}>
+    Refresh Connected Users
+  </button>
+)}
     </div>
   );
 }
