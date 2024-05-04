@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useContext} from 'react';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../components/UserContext'
 
 const NextPage = () => {
 const navigate = useNavigate();
+const { userName } = useContext(UserContext);
+
 
 
   const location = useLocation();
   const { key, value } = location.state;
-  const { username } = location.state;
 
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
@@ -17,14 +19,17 @@ const navigate = useNavigate();
 
   useEffect(() => {
     const newSocket = io('http://localhost:5000', {
-      query: { user_id: username }
+      query: { user_id: userName }
     });
     setSocket(newSocket);
+    newSocket.open();
     newSocket.on('private_message', (msg) => {
+    console.log('Received message:', msg);
+
       setMessages((messages) => [...messages, msg]);
     });
     return () => newSocket.close();
-  }, [username]);
+  }, [userName]);
 
   const handleSend = () => {
     socket.emit('private_message', { recipient_id: key, message });
@@ -37,7 +42,7 @@ const navigate = useNavigate();
       <h1>Next Page</h1>
       <p>Key: {key}</p>
       <p>Value: {value}</p>
-      <p>Username: {username}</p>
+      <p>Username: {userName}</p>
 
       <input
         type="text"
@@ -56,7 +61,7 @@ const navigate = useNavigate();
       </div>
       <div>
         <button onClick={() => {
-            navigate('/',{state:{"username":username}});}}>
+            navigate('/',{state:{"userName":userName}});}}>
           Go to Home Page
         </button>
       </div>    

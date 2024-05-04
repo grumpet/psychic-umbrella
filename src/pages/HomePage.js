@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import { useNavigate ,} from 'react-router-dom';
+import UserContext from '../components/UserContext';
 
 function HomePage() {
 const navigate = useNavigate();
 
-  const [userName, setUserName] = useState('');
-  const [connectedUsers, setConnectedUsers] = useState({});
-  const [isConnected, setIsConnected] = useState(false);
+const { userName, setUserName } = useContext(UserContext);
+const [connectedUsers, setConnectedUsers] = useState({});
+const [isConnected, setIsConnected] = useState(false);
 
   const getConnectedUsers = (userName) => {
     axios.get('http://localhost:5000/get_connected_users',{
@@ -55,7 +56,7 @@ const navigate = useNavigate();
       <input
         type="text"
         value={userName}
-        onChange={e => setUserName(e.target.value)}
+        onChange = {e => setUserName(e.target.value)}
         placeholder="User Name"
         disabled={isConnected}
       />
